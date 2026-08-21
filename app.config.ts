@@ -87,6 +87,13 @@ const config: ExpoConfig = {
   plugins: [
     "expo-router",
     [
+      "expo-notifications",
+      {
+        color: "#1D6B54",
+        defaultChannel: "atlas-briefs",
+      },
+    ],
+    [
       "expo-camera",
       {
         "cameraPermission": "Allow $(PRODUCT_NAME) to use the camera for Atlas Lens barcode scanning.",

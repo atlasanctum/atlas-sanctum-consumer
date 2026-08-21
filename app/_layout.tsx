@@ -10,6 +10,7 @@ import "@/lib/_core/nativewind-pressable";
 import { AtlasOverlays } from "@/components/atlas-overlays";
 import { AtlasProvider } from "@/lib/atlas-context";
 import { AtlasLifeProvider } from "@/lib/atlas-life-context";
+import { AtlasLifeSync } from "@/components/atlas-life-sync";
 import { ThemeProvider } from "@/lib/theme-provider";
 import {
   SafeAreaFrameContext,
@@ -87,6 +88,7 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <AtlasProvider>
             <AtlasLifeProvider>
+            <AtlasLifeSync />
             {/* Default to hiding native headers so raw route segments don't appear (e.g. "(tabs)", "products/[id]"). */}
             {/* If a screen needs the native header, explicitly enable it and set a human title via Stack.Screen options. */}
             <Stack screenOptions={{ headerShown: false }}>

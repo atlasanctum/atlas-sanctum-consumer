@@ -15,6 +15,13 @@
       "when": 1787300629302,
       "tag": "0001_chief_chimera",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787308608089,
+      "tag": "0002_happy_iron_man",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { COOKIE_NAME } from "../shared/const";
 import { encryptAtlasPayload, getAtlasEncryptionReadiness } from "./atlas-crypto";
-import { generateCitedRecommendation, getProviderReadiness, lookupOpenFoodFactsProduct } from "./atlas-services";
+import { generateCitedRecommendation, getProviderReadiness, lookupOpenFoodFactsProduct, retailSearchSchema, searchRetailPrices } from "./atlas-services";
+import { normalizeBriefPreferences, reconcileBriefSchedules } from "./atlas-briefs";
 import * as db from "./db";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
@@ -14,7 +15,17 @@ export const appRouter = router({
   atlas: router({
     security: publicProcedure.query(() => getAtlasEncryptionReadiness()),
     lens: router({ lookup: publicProcedure.input(z.object({ barcode: z.string() })).query(({ input }) => lookupOpenFoodFactsProduct(input.barcode)) }),
+    commerce: router({ search: publicProcedure.input(retailSearchSchema).query(({ input }) => searchRetailPrices(input)) }),
     ai: router({ recommend: publicProcedure.input(z.object({ prompt: z.string().min(2).max(2000), barcode: z.string().optional(), profileSummary: z.string().max(900).optional() })).mutation(async ({ input }) => { const lens = input.barcode ? await lookupOpenFoodFactsProduct(input.barcode) : null; return generateCitedRecommendation({ prompt: input.prompt, profileSummary: input.profileSummary, sources: lens?.sources ?? [] }); }) }),
+    life: router({
+      snapshot: protectedProcedure.query(async ({ ctx }) => { const snapshot = await db.getAtlasLifeSnapshot(ctx.user.id); return snapshot ? { payloadJson: snapshot.payloadJson, updatedAt: snapshot.updatedAt } : null; }),
+      saveSnapshot: protectedProcedure.input(z.object({ payloadJson: z.string().min(2).max(150000) })).mutation(async ({ ctx, input }) => db.saveAtlasLifeSnapshot(ctx.user.id, input.payloadJson)),
+    }),
+    briefs: router({
+      preferences: protectedProcedure.query(async ({ ctx }) => await db.getAtlasBriefPreferences(ctx.user.id)),
+      updatePreferences: protectedProcedure.input(z.object({ dailyEnabled: z.boolean(), dailyHour: z.number().int().min(0).max(23), dailyMinute: z.number().int().min(0).max(59), weeklyEnabled: z.boolean(), weeklyWeekday: z.number().int().min(0).max(6), weeklyHour: z.number().int().min(0).max(23), weeklyMinute: z.number().int().min(0).max(59), notificationEnabled: z.boolean(), digestMode: z.boolean() })).mutation(async ({ ctx, input }) => db.saveAtlasBriefPreferences(ctx.user.id, normalizeBriefPreferences(input))),
+      activateSchedules: protectedProcedure.input(z.object({ dailyEnabled: z.boolean(), dailyHour: z.number().int().min(0).max(23), dailyMinute: z.number().int().min(0).max(59), weeklyEnabled: z.boolean(), weeklyWeekday: z.number().int().min(0).max(6), weeklyHour: z.number().int().min(0).max(23), weeklyMinute: z.number().int().min(0).max(59), notificationEnabled: z.boolean(), digestMode: z.boolean() })).mutation(async ({ ctx, input }) => { const preferences = normalizeBriefPreferences(input); const existing = await db.getAtlasBriefPreferences(ctx.user.id); await db.saveAtlasBriefPreferences(ctx.user.id, preferences); return reconcileBriefSchedules(ctx.req, ctx.user.id, preferences, existing); }),
+    }),
     connections: router({
       catalog: protectedProcedure.query(() => ({ providers: getProviderReadiness(), encryption: getAtlasEncryptionReadiness() })),
       status: protectedProcedure.query(async ({ ctx }) => ({ connections: await db.listAtlasConnections(ctx.user.id), encryption: getAtlasEncryptionReadiness() })),

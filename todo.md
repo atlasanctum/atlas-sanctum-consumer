@@ -26,3 +26,10 @@
 - [x] Build intelligent commerce, inventory-aware ownership checks, opportunity coordination, and user-confirmed action/verification workflows.
 - [x] Expand regenerative impact, project participation, trust records, and a transparent "How Atlas understands me" personal graph view.
 - [x] Add deterministic tests for graph governance, memory controls, scenarios, Pulse prioritization, action confirmation, and verification behavior.
+- [x] Add provider-ready retail search and price intelligence with source, freshness, and fallback transparency.
+- [x] Persist Personal Graph, memories, decisions, actions, outcomes, and brief preferences through authenticated user-scoped server procedures.
+- [x] Add authorization tests that enforce user-scoped graph and memory access on every protected procedure.
+- [x] Add user-controlled daily and weekly brief preferences, local scheduling, permission states, and notification delivery.
+- [x] Add deterministic tests for provider evidence, secure persistence contracts, and brief scheduling behavior.
+- [ ] Configure secure eBay environment variables and preserve a transparent non-live fallback until credentials are available.
+- [x] Document the platform environment-variable names and activation checks for authenticated retail pricing.
