@@ -59,3 +59,18 @@ The first build retains a small local personal graph. `Profile` owns priorities 
 ## Accessibility and Safety Decisions
 
 Each icon is paired with an accessible label, interactive controls supply visible pressed states, and status information is not communicated by color alone. Health-related content is educational and avoids diagnosis or treatment claims. Financial and product recommendations are clearly labelled as planning guidance. Consent controls are visible in Profile rather than hidden in setup.
+
+## Connected Product Architecture
+
+The connected build adds three user-controlled capabilities. Atlas Lens becomes a full-screen camera experience that requests access only after the user chooses to scan, reads supported barcode formats locally, and sends the captured identifier into a product-intelligence request. The Connection Center is nested under Profile and separates Health Passport, financial accounts, and consent history into distinct cards. A connection begins only after a signed-in user confirms the data category, purpose, and revocation control.
+
+| Capability | User experience | Service boundary | Protection |
+| --- | --- | --- | --- |
+| Atlas Lens | Scan an EAN, UPC, QR, or Code 128 barcode with a dedicated camera sheet. | The client sends a normalized barcode payload to a protected product procedure. | Camera access is requested just in time; repeated scan events are ignored. |
+| Health Passport | View encrypted record cards and explicitly connect a health source when credentials are configured. | Protected records and consent endpoints scoped to the authenticated Atlas user. | Health content is encrypted before persistence and blocked when the production key is not valid. |
+| Financial context | Connect an account provider, review the consent scope, and disconnect later. | Provider adapter boundary stores opaque encrypted connection metadata, never raw account credentials. | The production flow remains disabled until a valid server encryption key and provider credentials are configured. |
+| Atlas AI | Ask for a decision and receive a recommendation, concise rationale, trade-off, confidence, and supporting sources. | A protected server procedure selects a live built-in language model and returns a validated response contract. | The model sees a minimized request context; source links are rendered as evidence, not as hidden reasoning. |
+
+## Connected Screen and Flow Additions
+
+The Profile screen gains an authenticated **Connection Center** and an individual **Consent Detail** sheet. The camera scanner opens only from Atlas Lens, so a scanner preview is never mounted behind another screen. The AI sheet adds a source row beneath the recommendation and shows a transparent readiness message when protected context has not been connected. All potentially sensitive writes are gated by a server-side encryption readiness check. In development, this makes the connection architecture observable without silently storing protected records under an invalid key.
