@@ -17,3 +17,12 @@
 - [x] Add a provider-backed Atlas AI service that returns concise recommendations with source citations.
 - [x] Add tests for connection consent, encrypted storage contracts, scanning payloads, and cited AI responses.
 - [x] Preserve a production credential guard that blocks sensitive-record writes until a valid encryption key is configured manually.
+- [x] Expand the consent-aware Personal Graph with goals, constraints, assets, skills, opportunities, decisions, outcomes, and trust records.
+- [x] Add governed persistent memory with session, personal, goal, decision, behavioral, household, and project scopes plus user controls.
+- [x] Implement context-minimizing retrieval and transparent preference explanations for Atlas reasoning.
+- [x] Build Atlas Pulse for actionable situations, proactive recommendations, alternatives, expected outcomes, and user-managed alert controls.
+- [x] Extend the decision engine with explainable multi-option scoring, confidence, trade-offs, and reversibility.
+- [x] Add scenario planning for current, best-case, base-case, and worst-case personal outcomes.
+- [x] Build intelligent commerce, inventory-aware ownership checks, opportunity coordination, and user-confirmed action/verification workflows.
+- [x] Expand regenerative impact, project participation, trust records, and a transparent "How Atlas understands me" personal graph view.
+- [x] Add deterministic tests for graph governance, memory controls, scenarios, Pulse prioritization, action confirmation, and verification behavior.
