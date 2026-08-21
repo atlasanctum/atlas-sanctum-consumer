@@ -1,48 +1,16 @@
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
-
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { AtlasOnboarding } from "@/components/atlas-onboarding";
+import { AppPressable, IconCircle, Pill, ProgressBar, SectionHeading } from "@/components/atlas-primitives";
 import { ScreenContainer } from "@/components/screen-container";
-
-/**
- * Home Screen - NativeWind Example
- *
- * This template uses NativeWind (Tailwind CSS for React Native).
- * You can use familiar Tailwind classes directly in className props.
- *
- * Key patterns:
- * - Use `className` instead of `style` for most styling
- * - Theme colors: use tokens directly (bg-background, text-foreground, bg-primary, etc.); no dark: prefix needed
- * - Responsive: standard Tailwind breakpoints work on web
- * - Custom colors defined in tailwind.config.js
- */
-export default function HomeScreen() {
-  return (
-    <ScreenContainer className="p-6">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="flex-1 gap-8">
-          {/* Hero Section */}
-          <View className="items-center gap-2">
-            <Text className="text-4xl font-bold text-foreground">Welcome</Text>
-            <Text className="text-base text-muted text-center">
-              Edit app/(tabs)/index.tsx to get started
-            </Text>
-          </View>
-
-          {/* Example Card */}
-          <View className="w-full max-w-sm self-center bg-surface rounded-2xl p-6 shadow-sm border border-border">
-            <Text className="text-lg font-semibold text-foreground mb-2">NativeWind Ready</Text>
-            <Text className="text-sm text-muted leading-relaxed">
-              Use Tailwind CSS classes directly in your React Native components.
-            </Text>
-          </View>
-
-          {/* Example Button */}
-          <View className="items-center">
-            <TouchableOpacity className="bg-primary px-6 py-3 rounded-full active:opacity-80">
-              <Text className="text-background font-semibold">Get Started</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </ScreenContainer>
-  );
-}
+import { atlasColors } from "@/constants/atlas";
+import { useAtlas } from "@/lib/atlas-context";
+export default function HomeScreen() { const { ready, onboarded, profile, actions, openAI, openLens } = useAtlas(); if (!ready || !onboarded) return <AtlasOnboarding />; const doneActions = actions.filter((item) => item.completed).length; return <ScreenContainer containerClassName="bg-background"><ScrollView style={styles.screen} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+  <View style={styles.header}><View><Text style={styles.greeting}>GOOD MORNING, {profile.name.toUpperCase()}</Text><Text style={styles.pageTitle}>Your Atlas</Text></View><AppPressable accessibilityLabel="Review today with Atlas" onPress={() => openAI("What should I prioritize today?")} style={styles.avatar}><Text style={styles.avatarText}>{profile.name.slice(0, 1).toUpperCase()}</Text></AppPressable></View><View style={styles.statusRow}><View style={styles.liveDot} /><Text style={styles.statusText}>LOCAL CONTEXT ACTIVE</Text><Text style={styles.statusMeta}>{profile.priorities.length} priorities guiding today</Text></View>
+  <AppPressable accessibilityLabel="Ask Atlas what to prioritize" onPress={() => openAI("What should I prioritize today?")} style={styles.briefingCard}><View style={styles.briefingTop}><Pill label="TODAY'S ATLAS" tone="sun" /><MaterialIcons name="auto-awesome" size={19} color="#D9F0E4" /></View><Text style={styles.briefingTitle}>Protect your energy before adding new commitments.</Text><Text style={styles.briefingCopy}>A momentum walk and a focused career block create the strongest compound value today.</Text><View style={styles.briefingFooter}><Text style={styles.briefingAction}>Review the plan</Text><MaterialIcons name="arrow-forward" size={18} color={atlasColors.paper} /></View></AppPressable>
+  <View style={styles.metricsRow}><View style={styles.metricCard}><Text style={styles.metricLabel}>AVAILABLE</Text><Text style={styles.metricValue}>€340</Text><Text style={styles.metricMeta}>after planned costs</Text></View><View style={styles.metricCard}><Text style={styles.metricLabel}>RUNNING GOAL</Text><Text style={styles.metricValue}>72%</Text><ProgressBar value={72} color="sun" /></View></View>
+  <SectionHeading eyebrow="MAKE A BETTER BUY" title="Atlas Lens" /><AppPressable accessibilityLabel="Open Atlas Lens" onPress={openLens} style={styles.lensCard}><IconCircle name="center-focus-strong" tone="sun" size={50} /><View style={styles.lensCopy}><Text style={styles.lensTitle}>Look beyond the price tag</Text><Text style={styles.lensText}>Scan a product for quality, materials, health, and long-term value.</Text></View><MaterialIcons name="arrow-forward" size={20} color={atlasColors.green} /></AppPressable>
+  <SectionHeading eyebrow="YOUR MOMENTUM" title="Small actions, compounding" action={`${doneActions}/${actions.length} done`} /><View style={styles.goalCard}><View style={styles.goalIcon}><MaterialIcons name="directions-run" size={20} color={atlasColors.paper} /></View><View style={styles.goalCopy}><Text style={styles.goalTitle}>Build a steadier running habit</Text><Text style={styles.goalText}>18 of 25 sessions completed this season</Text><ProgressBar value={72} /></View></View>
+  <SectionHeading eyebrow="MATCHED FOR YOU" title="Opportunity signals" action="Discover" /><AppPressable accessibilityLabel="Review opportunities with Atlas" onPress={() => openAI("Find me opportunities for this skill.")} style={styles.opportunityCard}><View style={styles.opportunityIcon}><MaterialIcons name="hub" size={20} color={atlasColors.green} /></View><View style={styles.opportunityCopy}><Text style={styles.opportunityMeta}>3 NEW MATCHES · 92% TOP FIT</Text><Text style={styles.opportunityTitle}>Applied AI systems cohort</Text><Text style={styles.opportunityText}>A practical pathway aligned to your learning goal.</Text></View><MaterialIcons name="chevron-right" size={23} color={atlasColors.moss} /></AppPressable>
+</ScrollView></ScreenContainer>; }
+const styles = StyleSheet.create({ screen: { backgroundColor: atlasColors.mist }, content: { gap: 17, paddingBottom: 118, paddingHorizontal: 18, paddingTop: 18 }, header: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" }, greeting: { color: atlasColors.moss, fontSize: 10, fontWeight: "900", letterSpacing: 1.1 }, pageTitle: { color: atlasColors.ink, fontSize: 31, fontWeight: "800", letterSpacing: -1.05, marginTop: 4 }, avatar: { alignItems: "center", backgroundColor: atlasColors.greenDark, borderColor: atlasColors.paper, borderRadius: 99, borderWidth: 3, height: 44, justifyContent: "center", width: 44 }, avatarText: { color: atlasColors.paper, fontSize: 16, fontWeight: "900" }, statusRow: { alignItems: "center", flexDirection: "row", gap: 6, marginTop: -7 }, liveDot: { backgroundColor: atlasColors.green, borderRadius: 99, height: 6, width: 6 }, statusText: { color: atlasColors.green, fontSize: 9, fontWeight: "900", letterSpacing: 0.85 }, statusMeta: { color: atlasColors.moss, fontSize: 10, marginLeft: 3 }, briefingCard: { backgroundColor: atlasColors.greenDark, borderRadius: 26, gap: 14, padding: 19 }, briefingTop: { alignItems: "center", flexDirection: "row", justifyContent: "space-between" }, briefingTitle: { color: atlasColors.paper, fontSize: 24, fontWeight: "800", letterSpacing: -0.7, lineHeight: 29 }, briefingCopy: { color: "#C1DACE", fontSize: 14, lineHeight: 20 }, briefingFooter: { alignItems: "center", flexDirection: "row", gap: 8, marginTop: 3 }, briefingAction: { color: atlasColors.paper, fontSize: 14, fontWeight: "800" }, metricsRow: { flexDirection: "row", gap: 10 }, metricCard: { backgroundColor: atlasColors.paper, borderColor: atlasColors.line, borderRadius: 18, borderWidth: 1, flex: 1, gap: 6, padding: 14 }, metricLabel: { color: atlasColors.moss, fontSize: 9, fontWeight: "900", letterSpacing: 0.9 }, metricValue: { color: atlasColors.ink, fontSize: 24, fontWeight: "900", letterSpacing: -0.5 }, metricMeta: { color: atlasColors.slate, fontSize: 11, lineHeight: 15 }, lensCard: { alignItems: "center", backgroundColor: atlasColors.paper, borderColor: atlasColors.line, borderRadius: 20, borderWidth: 1, flexDirection: "row", gap: 12, padding: 13 }, lensCopy: { flex: 1, gap: 3 }, lensTitle: { color: atlasColors.ink, fontSize: 16, fontWeight: "800" }, lensText: { color: atlasColors.slate, fontSize: 12, lineHeight: 17 }, goalCard: { alignItems: "flex-start", backgroundColor: "#E6F0EB", borderRadius: 19, flexDirection: "row", gap: 11, padding: 14 }, goalIcon: { alignItems: "center", backgroundColor: atlasColors.green, borderRadius: 14, height: 42, justifyContent: "center", width: 42 }, goalCopy: { flex: 1, gap: 5 }, goalTitle: { color: atlasColors.ink, fontSize: 15, fontWeight: "800" }, goalText: { color: atlasColors.slate, fontSize: 12 }, opportunityCard: { alignItems: "center", backgroundColor: atlasColors.paper, borderColor: atlasColors.line, borderRadius: 20, borderWidth: 1, flexDirection: "row", gap: 11, padding: 14 }, opportunityIcon: { alignItems: "center", backgroundColor: atlasColors.mint, borderRadius: 14, height: 43, justifyContent: "center", width: 43 }, opportunityCopy: { flex: 1, gap: 3 }, opportunityMeta: { color: atlasColors.green, fontSize: 9, fontWeight: "900", letterSpacing: 0.7 }, opportunityTitle: { color: atlasColors.ink, fontSize: 15, fontWeight: "800" }, opportunityText: { color: atlasColors.slate, fontSize: 12 } });
