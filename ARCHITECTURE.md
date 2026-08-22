@@ -18,9 +18,15 @@ Atlas is organized as a personal intelligence system whose client experience rem
 
 Atlas treats the user as the final authority. The action model explicitly distinguishes observation, recommendation, preparation, confirmed execution, and guardrailed automation. Sensitive health and financial writes remain unavailable until the server-side encryption guard reports a valid production key. External product and knowledge content is evidence, not instruction, and structured AI output is validated before it reaches the interface.
 
+## Roadmap Domain Model
+
+The completed consumer roadmap is expressed through interoperable Wallet, Food, Health, Home, Wardrobe, Mobility, Learning, Opportunity, Project, Community, Marketplace, and Impact domain workflows. Each workflow adds only declared or clearly labelled inferred context to the Personal Graph, then delegates prioritisation to the same decision, action, outcome, and learning loop. The Life Hub provides a single entry point for these domains so users can move from a question to a prepared action without losing context.
+
+The Atlas Orchestrator routes a request to a small set of specialised reasoning lanes—Finance, Food, Wellness, Commerce, Home, Capability, and Impact—based on the request’s language and active graph context. This is an explainable selection aid rather than concealed agent autonomy. Every lane returns its scope, supporting context, uncertainties, and a user-confirmed next step.
+
 ## Provider Boundaries
 
-The mobile client communicates only through typed server procedures. Provider-specific health, financial, commerce, and AI integrations sit behind adapter-ready services, allowing unavailable credentials or unsafe services to be disabled without replacing app screens. The feature flags and orchestration boundaries can be extended by a future internal console; normal users receive no internal diagnostic data.
+The mobile client communicates only through typed server procedures. Provider-specific health, financial, commerce, AI, and optional Supabase-compatible persistence integrations sit behind adapter-ready services, allowing unavailable credentials or unsafe services to be disabled without replacing app screens. The feature flags and orchestration boundaries can be extended by a future internal console; normal users receive no internal diagnostic data.
 
 ## Persistence Strategy
 
