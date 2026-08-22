@@ -598,7 +598,7 @@ git --version
 ## Clone
 
 ```bash
-git clone https://github.com/YOUR_ORGANIZATION/atlas-sanctum-consumer.git
+git clone https://github.com/atlas-sanctum/atlas-sanctum-consumer.git
 
 cd atlas-sanctum-consumer
 ```
